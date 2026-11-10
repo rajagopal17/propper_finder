@@ -1,0 +1,5 @@
+# local SQLite CLI tools
+/sqlite/
+
+# scraper output
+*.db
