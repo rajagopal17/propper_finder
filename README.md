@@ -35,9 +35,12 @@ playwright install chromium
 adb-ngo-scraper
 ```
 
-Writes/updates `data/adb_ngo_notices.db` (table `notices`) and logs to
-`logs/run_<timestamp>.log`. Use `--headed` to watch the browser while
-debugging, `--db-path` / `--log-dir` / `--max-pages` to override defaults.
+Writes/updates `adb_ngo_notices.db` (table `notices`) in the project root and
+logs to `logs/run_<timestamp>.log`. Each run appends newly found notices to
+the same table and skips ones already seen (dedup on title + expertise +
+published date), so repeated runs accumulate rather than overwrite. Use
+`--headed` to watch the browser while debugging, `--db-path` / `--log-dir` /
+`--max-pages` to override defaults.
 
 ## Run on a schedule
 

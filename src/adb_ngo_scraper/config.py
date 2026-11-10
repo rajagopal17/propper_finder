@@ -18,7 +18,7 @@ SECTOR_LABELS = [
     "Multisector",
 ]
 
-DEFAULT_DB_PATH = REPO_ROOT / "data" / "adb_ngo_notices.db"
+DEFAULT_DB_PATH = REPO_ROOT / "adb_ngo_notices.db"
 DEFAULT_LOG_DIR = REPO_ROOT / "logs"
 
 # Safety cap on pagination loops regardless of what the site reports.

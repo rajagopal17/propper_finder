@@ -18,9 +18,9 @@ playwright install chromium
 adb-ngo-scraper
 ```
 
-This writes to `data/adb_ngo_notices.db` and logs to `logs/run_<timestamp>.log`.
-Confirm it exits with code 0 and the log shows a "Run complete" line before
-scheduling it.
+This writes to `adb_ngo_notices.db` in the project root and logs to
+`logs/run_<timestamp>.log`. Confirm it exits with code 0 and the log shows a
+"Run complete" line before scheduling it.
 
 ## 3. Register the scheduled task
 
@@ -33,7 +33,7 @@ Open Task Scheduler → Create Task:
   - Program/script: full path to `.venv\Scripts\python.exe` in this project.
   - Add arguments: `-m adb_ngo_scraper.main`
   - Start in: the full path to this project's root directory (so the default
-    `data/` and `logs/` paths resolve correctly).
+    database and `logs/` paths resolve correctly).
 - **Conditions**: uncheck "Start the task only if the computer is on AC power"
   if this runs on a laptop.
 - **Settings**: check "If the task fails, restart every" a few minutes, up to a
