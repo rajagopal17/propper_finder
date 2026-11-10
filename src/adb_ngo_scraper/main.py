@@ -51,8 +51,10 @@ def main(argv=None) -> int:
 
     # A run that finds zero new notices is a normal outcome, not a failure.
     if counts["inserted"] == 0:
-        logger.info("No new notices this run (duplicate=%d, excluded=%d, inactive=%d).",
-                     counts["duplicate"], counts["excluded"], counts["inactive"])
+        logger.info(
+            "No new notices this run (duplicate=%d, excluded=%d, inactive=%d, not_relevant=%d).",
+            counts["duplicate"], counts["excluded"], counts["inactive"], counts["not_relevant"],
+        )
     return 0
 
 

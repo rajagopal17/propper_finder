@@ -18,6 +18,9 @@ def _process_row(conn, row: dict) -> str:
     title = row["title"]
     expertise = row["expertise"]
 
+    if not classify.is_included(title, expertise):
+        return "not_relevant"
+
     if classify.is_excluded(title, expertise):
         return "excluded"
 
@@ -46,7 +49,14 @@ def scrape_once(db_path: Path, headless: bool = True, max_pages: int = config.MA
     conn = db.get_connection(db_path)
     db.init_db(conn)
 
-    counts = {"inserted": 0, "duplicate": 0, "excluded": 0, "inactive": 0, "pages": 0}
+    counts = {
+        "inserted": 0,
+        "duplicate": 0,
+        "excluded": 0,
+        "inactive": 0,
+        "not_relevant": 0,
+        "pages": 0,
+    }
 
     with sync_playwright() as p:
         pw_browser = p.chromium.launch(headless=headless)
@@ -56,9 +66,6 @@ def scrape_once(db_path: Path, headless: bool = True, max_pages: int = config.MA
 
             for label in config.CONSULTANT_TYPE_LABELS:
                 _ensure_checked(page, label)
-
-            for label in config.SECTOR_LABELS:
-                _ensure_checked(page, label, section_label="Sector")
 
             page_num = 1
             while True:
@@ -81,11 +88,12 @@ def scrape_once(db_path: Path, headless: bool = True, max_pages: int = config.MA
 
     conn.close()
     logger.info(
-        "Run complete: inserted=%d duplicate=%d excluded=%d inactive=%d pages=%d",
+        "Run complete: inserted=%d duplicate=%d excluded=%d inactive=%d not_relevant=%d pages=%d",
         counts["inserted"],
         counts["duplicate"],
         counts["excluded"],
         counts["inactive"],
+        counts["not_relevant"],
         counts["pages"],
     )
     return counts

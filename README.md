@@ -2,10 +2,10 @@
 
 Scrapes ADB's Consultant Management System (`cms.adb.org`) for consulting
 notices that NGOs (as firms) could realistically take up — education/training,
-health and social protection, agriculture/forestry and rural development, and
-multisector social projects — while filtering out capital-intensive,
-construction-heavy notices. Results are stored in SQLite with no duplicates
-across repeated runs.
+health and nutrition, social welfare, forestry/rural development, community
+awareness, poverty, and (environmental and) social impact work — while
+filtering out capital-intensive, construction-heavy notices. Results are
+stored in SQLite with no duplicates across repeated runs.
 
 ## What it actually scrapes
 
@@ -13,11 +13,18 @@ across repeated runs.
 listing (Consulting Services Recruitment Notices, CSRN) lives on
 `selfservice.adb.org`. The scraper drives that listing with these filters:
 
-- **Consultant Type**: Firm only (not Individual).
-- **Sector**: Education, Health and social protection, Agriculture and natural
-  resources, Multisector.
-- Within those, a keyword exclusion list drops construction/civil-works-heavy
-  notices (see `src/adb_ngo_scraper/classify.py`).
+- **Consultant Type**: Firm only (not Individual) — the only site-side filter
+  applied. NGO-relevance is decided in code, not via the site's Sector facet:
+  that facet doesn't reliably tag cross-cutting notices (e.g. "poverty",
+  "community awareness") under the sectors you'd expect, so restricting by it
+  would silently drop relevant notices filed under an unrelated sector.
+- Every Firm notice is then classified in `src/adb_ngo_scraper/classify.py` by
+  keyword against its title + expertise text:
+  - **Included** if it mentions education/training, health/nutrition, gender/
+    child/social welfare, forestry/rural development, community awareness,
+    poverty, or (environmental and) social impact work.
+  - **Excluded** (even if included above) if it looks capital-intensive/
+    construction-heavy (construction, civil works, bridge, road, dam, etc.).
 - **Active** means the notice's deadline (Manila time) has not yet passed.
 
 ## Setup
